@@ -278,7 +278,7 @@ class JScraper:
 
 #If running as a script.
 if __name__ == "__main__":
-    scpr = JScraper(browser_isheadless=False)
+    scpr = JScraper()
     results = scpr.scrape()
     scpr.recordData(results)
     scpr.renderGraph()
