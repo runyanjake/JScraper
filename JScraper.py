@@ -218,6 +218,45 @@ class JScraper:
                 # except:
                 #     print("AN ERROR WAS HANDLED DURING DATABASE ENTRY")
 
+    #retrieves last n pricing records of the low for a certain currency, ordered by latest first
+    def retrieveLows(self, curr="BTC", max=1):
+        lows = []
+        if curr not in self.__currencyTypes:
+            raise JScraperException("Attempted to retrive lows for currency not stored in database.")
+        tablename = curr + "prices"
+        itor = 1
+        for row in self.__connection.execute("SELECT * FROM " + str(tablename) + " ORDER BY date DESC"):
+            lows.append(row[6])
+            if itor >= max:
+                break
+        return lows
+
+    #retrieves last n pricing records of the medians for a certain currency, ordered by latest first
+    def retrieveMedians(self, curr="BTC", max=1):
+        lows = []
+        if curr not in self.__currencyTypes:
+            raise JScraperException("Attempted to retrive lows for currency not stored in database.")
+        tablename = curr + "prices"
+        itor = 1
+        for row in self.__connection.execute("SELECT * FROM " + str(tablename) + " ORDER BY date DESC"):
+            lows.append(row[2])
+            if itor >= max:
+                break
+        return lows
+
+    #retrieves last n pricing records of the highs for a certain currency, ordered by latest first
+    def retrieveHighs(self, curr="BTC", max=1):
+        lows = []
+        if curr not in self.__currencyTypes:
+            raise JScraperException("Attempted to retrive lows for currency not stored in database.")
+        tablename = curr + "prices"
+        itor = 1
+        for row in self.__connection.execute("SELECT * FROM " + str(tablename) + " ORDER BY date DESC"):
+            lows.append(row[4])
+            if itor >= max:
+                break
+        return lows
+
     #requires a connection to be defined
     def renderGraph(self, currency="ALL", mode="MEDIAN"):
         for curr in self.__currencyTypes:
@@ -279,7 +318,10 @@ class JScraper:
 #If running as a script.
 if __name__ == "__main__":
     scpr = JScraper()
-    results = scpr.scrape()
-    scpr.recordData(results)
-    scpr.renderGraph()
+    # results = scpr.scrape()
+    # scpr.recordData(results)
+    # scpr.renderGraph()
+    print(scpr.retrieveMedians("BTC", 5))
+    print(scpr.retrieveLows("BTC", 5))
+    print(scpr.retrieveHighs("BTC", 5))
     del scpr
